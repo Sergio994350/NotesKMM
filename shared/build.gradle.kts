@@ -1,8 +1,8 @@
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
-    id("com.louiscad.complete-kotlin") version "1.1.0"
     id("com.squareup.sqldelight")
+    id("com.louiscad.complete-kotlin") version "1.1.0"
 }
 
 kotlin {
