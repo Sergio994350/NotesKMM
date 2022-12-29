@@ -3,6 +3,7 @@
     package="com.sergio994350.noteskmm.android">
 
     <application
+        android:name=".NoteApp"
         android:allowBackup="false"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
