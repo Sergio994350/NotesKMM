@@ -3,9 +3,12 @@ package com.sergio994350.noteskmm.android.note_list
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sergio994350.noteskmm.domain.note.Note
 import com.sergio994350.noteskmm.domain.note.NoteDataSource
 import com.sergio994350.noteskmm.domain.note.SearchNotes
+import com.sergio994350.noteskmm.domain.time.DateTimeUtil
+import com.sergio994350.noteskmm.presentation.RedOrangeHex
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -33,6 +36,23 @@ class NoteListViewModel @Inject constructor(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), NoteListState())
 
+//    (create test example of 10 notes)
+//    init {
+//        viewModelScope.launch {
+//            (1..10).forEach {
+//                noteDataSource.insertNote(
+//                    Note(
+//                        id = null,
+//                        title = "Note$it",
+//                        content = "Content$it",
+//                        colorHex = RedOrangeHex,
+//                        created = DateTimeUtil.now()
+//                    )
+//                )
+//            }
+//        }
+//    }
+
     fun loadNotes() {
         viewModelScope.launch {
             savedStateHandle["notes"] = noteDataSource.getAllNotes()
@@ -45,7 +65,7 @@ class NoteListViewModel @Inject constructor(
 
     fun onToggleSearch() {
         savedStateHandle["isSearchActive"] = !isSearchActive.value
-        if(!isSearchActive.value) {
+        if (!isSearchActive.value) {
             savedStateHandle["searchText"] = ""
         }
     }

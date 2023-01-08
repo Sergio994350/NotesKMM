@@ -1,9 +1,8 @@
 package com.sergio994350.noteskmm.android
 
 import android.os.Bundle
-import android.widget.TextView
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
@@ -18,20 +17,14 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.sergio994350.noteskmm.android.note_detail.NoteDetailScreen
 import com.sergio994350.noteskmm.android.note_list.NoteListScreen
 import dagger.hilt.android.AndroidEntryPoint
-
-@AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MyApplicationTheme {
-                NoteListScreen()
-            }
-        }
-    }
-}
 
 @Composable
 fun MyApplicationTheme(
@@ -70,4 +63,33 @@ fun MyApplicationTheme(
         shapes = shapes,
         content = content
     )
+}
+
+@AndroidEntryPoint
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            MyApplicationTheme {
+                val navController = rememberNavController()
+                NavHost(navController = navController, startDestination = "note_list") {
+                    composable(route = "note_list") {
+                        NoteListScreen(navController = navController)
+                    }
+                    composable(
+                        route = "note_detail/{noteId}",
+                        arguments = listOf(
+                            navArgument(name = "noteId") {
+                                type = NavType.LongType
+                                defaultValue = -1L
+                            }
+                        )
+                    ) { backStackEntry ->
+                        val noteId = backStackEntry.arguments?.getLong("noteId") ?: -1L
+                        NoteDetailScreen(noteId = noteId, navController = navController)
+                    }
+                }
+            }
+        }
+    }
 }
